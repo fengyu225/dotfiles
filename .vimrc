@@ -102,13 +102,8 @@ filetype plugin indent on    " required
 set nocompatible
 set autoindent
 
-set tabstop=2
-set expandtab
-set shiftwidth=2
-set softtabstop=2
-
 set shiftwidth=4  " operation >> indents 2 columns; << unindents 2 columns
-set tabstop=4     " a hard TAB displays as 2 columns
+set tabstop=8     " a hard TAB displays as 2 columns
 set expandtab     " insert spaces when hitting TABs
 set softtabstop=4 " insert/delete 2 spaces when hitting a TAB/BACKSPACE
 set shiftround    " round indent to multiple of 'shiftwidth'
