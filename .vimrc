@@ -98,16 +98,6 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 
-" Make Vim more useful
-set nocompatible
-set autoindent
-
-set shiftwidth=4  " operation >> indents 2 columns; << unindents 2 columns
-set tabstop=8     " a hard TAB displays as 2 columns
-set expandtab     " insert spaces when hitting TABs
-set softtabstop=4 " insert/delete 2 spaces when hitting a TAB/BACKSPACE
-set shiftround    " round indent to multiple of 'shiftwidth'
-set autoindent    " align the new line indent with the previous line
 
 filetype indent on
 " Use the OS clipboard by default (on versions compiled with `+clipboard`)
@@ -208,3 +198,17 @@ endif
 set noeb vb t_vb=
 
 au BufEnter /private/tmp/crontab.* setl backupcopy=yes
+
+" Make Vim more useful
+set nocompatible
+set autoindent
+
+set shiftwidth=4  " operation >> indents 2 columns; << unindents 2 columns
+set tabstop=8     " a hard TAB displays as 2 columns
+set softtabstop=4 " insert/delete 2 spaces when hitting a TAB/BACKSPACE
+set expandtab     " insert spaces when hitting TABs
+set shiftround    " round indent to multiple of 'shiftwidth'
+set autoindent    " align the new line indent with the previous line
+
+set tabstop=4 shiftwidth=4 expandtab
+set pastetoggle=<F2>
