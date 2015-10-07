@@ -41,6 +41,14 @@ function leetcode_push(){
     push_cpp;
 	cd $orig_dir;
 }
+function lintcode_push(){
+    orig_dir=`pwd`;
+    cd ~/code/lintcode;
+    find ./ -name '*.[ch]' -o -name '*.h' -o -name '*.c' -o -name '*.cpp' -exec git add {} \;
+    git commit -m "`git status -s`";
+    git push;
+	cd $orig_dir;
+}
 function poj_push(){
     orig_dir=`pwd`;
     cd ~/code/poj;
@@ -64,4 +72,7 @@ function cpp(){
 }
 function findpyclass(){
     vi `pysearch 'class "$1"(' | awk 'BEGIN { FS=":" } ; { print $1 }'`;
+}
+function remove_words(){
+    sed -i '' "s/$1//g" $2; 
 }
