@@ -17,8 +17,9 @@ alias search_leetcode="find ~/code/leetcode -type f -name "
 function push_cpp(){
     #[ -f *.cpp ] && git add *.cpp || [ -f *.c ] && git add *.c || [ -f *.h ] && git add *.h;
     for d in `find ./ -type d -d 1 | grep -v '.git' | grep -v 'a.o'`;do
-        git add $d/*.cpp;
-        git add $d/*.h;
+        if ls $d/*.cpp >/dev/null 2>&1 ; then git add $d/*.cpp; fi;
+        if ls $d/*.py >/dev/null 2>&1 ; then git add $d/*.py; fi;
+        if ls $d/*.h >/dev/null 2>&1 ; then git add $d/*.h; fi;
     done;
     git commit -m "`git status -s`";
     git push;
@@ -49,9 +50,9 @@ function lintcode_push(){
     git push;
 	cd $orig_dir;
 }
-function poj_push(){
+function oj_push(){
     orig_dir=`pwd`;
-    cd ~/code/poj;
+    cd ~/code/oj;
     push_cpp;
 	cd $orig_dir;
 }
@@ -68,7 +69,11 @@ function cc150_push(){
 	cd $orig_dir;
 }
 function cpp(){
-  g++ -g $1 lib.cpp -o $2 -std=c++11 -pthread ;
+  if [ -f ./lib.cpp ]; then
+    g++ -g $1 lib.cpp -o $2 -std=c++11 -pthread ;
+  else
+    g++ -g $1 -o $2 -std=c++11 -pthread ;
+  fi
 }
 function findpyclass(){
     vi `pysearch 'class "$1"(' | awk 'BEGIN { FS=":" } ; { print $1 }'`;
