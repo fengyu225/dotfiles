@@ -6,14 +6,17 @@ export PYTHONPATH=$PYTHONPATH:/Library/Python/2.7/site-packages
 #	find ./ -name '*.py' | xargs grep --color $1
 #}
 #alias pysearch=pysearch
+alias c9ssh="/usr/local/bin/sshpass -p 'cl0udn1mbu5123$' ssh" 
 alias pysearch="find ./ -name '*.py' | xargs grep -n --color=always " 
 alias jssearch="find ./ -name '*.js' | xargs grep -n --color=always " 
 alias coffeesearch="find ./ -name '*.coffee' | xargs grep -n --color=always " 
-alias htmlsearch="find ./ -name '*.html' | xargs grep -n --color=always " 
+alias htmlsearch="find ./ -name '*.html' | xargs grep -n --color=always 2>/dev/null" 
 alias refind="find ./ -regex "
 export NODE_PATH=/usr/local/lib/node_modules
 alias diffmerge="diffmerge 2>/dev/null"
 alias search_leetcode="find ~/code/leetcode -type f -name "
+alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
+alias vi="/Applications/MacVim.app/Contents/MacOS/Vim"
 function push_cpp(){
     #[ -f *.cpp ] && git add *.cpp || [ -f *.c ] && git add *.c || [ -f *.h ] && git add *.h;
     for d in `find ./ -type d -d 1 | grep -v '.git' | grep -v 'a.o'`;do
@@ -45,9 +48,7 @@ function leetcode_push(){
 function lintcode_push(){
     orig_dir=`pwd`;
     cd ~/code/lintcode;
-    find ./ -name '*.[ch]' -o -name '*.h' -o -name '*.c' -o -name '*.cpp' -exec git add {} \;
-    git commit -m "`git status -s`";
-    git push;
+    push_cpp;
 	cd $orig_dir;
 }
 function oj_push(){
