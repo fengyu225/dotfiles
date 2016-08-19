@@ -13,8 +13,10 @@ Plugin 'gmarik/Vundle.vim'
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-scripts/indentpython.vim'
+Plugin 'klen/python-mode'
 Bundle 'Valloric/YouCompleteMe'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'jmcantrell/vim-virtualenv'
 " Plugin 'scrooloose/syntastic'
 " Plugin 'nvie/vim-flake8'
 Plugin 'jnurmine/Zenburn'
@@ -34,6 +36,13 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 let g:SimpylFold_docstring_preview=1
+let g:pymode_options_colorcolumn = 0
+let g:pymode_breakpoint = 1
+let g:pymode_virtualenv = 1
+
+let g:ycm_filetype_specific_completion_to_disable = {
+      \ 'python': 1
+      \}
 
 autocmd BufNewFile,BufRead *.py 
 			\ set tabstop=4   |
@@ -50,6 +59,10 @@ autocmd BufNewFile,BufRead *.cpp
 			\ set expandtab  |
 			\ set autoindent  |
 			\ set fileformat=unix
+
+" let g:ycm_filetype_blacklist = {
+"       \ 'python' : 1
+"       \}
 
 autocmd BufNewFile,BufRead *.js
 			\ set tabstop=2 |
@@ -162,9 +175,6 @@ set pastetoggle=<F2>
 
 " MCLS
 "
-" No numbering on MCLS as we need to be able to cut-n-paste visually when
-" executing them.
-autocmd BufRead ~/linkedin/doc/tools/mcl/* setlocal nonu
 " Use template on new MCLS
 autocmd BufNewFile ~/linkedin/doc/tools/mcl/*.txt 0r ~/.vim/skeleton.mcl
 " Conf syntax highlights script bits and comments nicely.
@@ -172,4 +182,36 @@ autocmd BufRead,BufNewFile ~/linkedin/doc/tools/mcl/*.txt set syntax=conf
 " No need to get crazy with tabs of 8 here.
 autocmd BufNewFile ~/linkedin/doc/tools/mcl/*.txt set tabstop=4
 
+" let g:pymode_python = 'python'
+python << EOF
+import sys, vim, os
 
+ve_dir = vim.eval('$VIRTUAL_ENV')
+if ve_dir:
+    ve_dir in sys.path or sys.path.insert(0, ve_dir)
+    activate_this = os.path.join(os.path.join(ve_dir, 'bin'), 'activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
+
+function! QuitAllBuf()
+  redir => buffersoutput
+  silent buffers
+  redir END
+"                     1BufNo  2Mods.     3File           4LineNo
+  let pattern = '^\s*\(\d\+\)\(.....\) "\(.*\)"\s\+line \(\d\+\)$'
+  let windowfound = 0
+
+  for bline in split(buffersoutput, "\n")
+    let m = matchlist(bline, pattern)
+
+    if (len(m) > 0)
+      if (m[2] =~ '..a..')
+        let windowfound = 1
+      endif
+    endif
+  endfor
+  if (windowfound>0)
+    quitall
+  endif
+endfunction
+autocmd WinEnter * call QuitAllBuf()
