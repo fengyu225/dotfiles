@@ -192,26 +192,3 @@ if ve_dir:
     activate_this = os.path.join(os.path.join(ve_dir, 'bin'), 'activate_this.py')
     execfile(activate_this, dict(__file__=activate_this))
 EOF
-
-function! QuitAllBuf()
-  redir => buffersoutput
-  silent buffers
-  redir END
-"                     1BufNo  2Mods.     3File           4LineNo
-  let pattern = '^\s*\(\d\+\)\(.....\) "\(.*\)"\s\+line \(\d\+\)$'
-  let windowfound = 0
-
-  for bline in split(buffersoutput, "\n")
-    let m = matchlist(bline, pattern)
-
-    if (len(m) > 0)
-      if (m[2] =~ '..a..')
-        let windowfound = 1
-      endif
-    endif
-  endfor
-  if (windowfound>0)
-    quitall
-  endif
-endfunction
-autocmd WinEnter * call QuitAllBuf()
