@@ -6,17 +6,32 @@ export PYTHONPATH=$PYTHONPATH:/Library/Python/2.7/site-packages
 #	find ./ -name '*.py' | xargs grep --color $1
 #}
 #alias pysearch=pysearch
-alias c9ssh="/usr/local/bin/sshpass -p 'cl0udn1mbu5123$' ssh" 
+alias rbsearch="find ./ -name '*.rb' | xargs grep -n --color=always " 
 alias pysearch="find ./ -name '*.py' | xargs grep -n --color=always " 
+alias cppsearch="find ./ -name '*.cpp' | xargs grep -n --color=always " 
 alias jssearch="find ./ -name '*.js' | xargs grep -n --color=always " 
 alias coffeesearch="find ./ -name '*.coffee' | xargs grep -n --color=always " 
 alias htmlsearch="find ./ -name '*.html' | xargs grep -n --color=always 2>/dev/null" 
+alias diffmerge="/Applications/DiffMerge.app/Contents/MacOS/diffmerge"
 alias refind="find ./ -regex "
 export NODE_PATH=/usr/local/lib/node_modules
-alias diffmerge="diffmerge 2>/dev/null"
 alias search_leetcode="find ~/code/leetcode -type f -name "
-alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
-alias vi="/Applications/MacVim.app/Contents/MacOS/Vim"
+#export VIRTUALENV_PYTHON="/usr/local/bin/python"
+alias diffmore="colordiff -y -s -w -B"
+# alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
+# alias vi="/Applications/MacVim.app/Contents/MacOS/Vim"
+alias vi="set_pythonpath;/Applications/MacVim.app/Contents/MacOS/Vim"
+
+function set_pythonpath(){
+    if [ ! -z $VIRTUAL_ENV ]; then
+        for d in `ls -1 $VIRTUAL_ENV/lib/`; do
+            if [[ $PYTHONPATH != *"$VIRTUAL_ENV/lib/$d/site-packages"* ]]; then
+                PYTHONPATH=$VIRTUAL_ENV/lib/$d/site-packages/:$PYTHONPATH;
+            fi;
+        done;
+    fi;
+}
+
 function push_cpp(){
     #[ -f *.cpp ] && git add *.cpp || [ -f *.c ] && git add *.c || [ -f *.h ] && git add *.h;
     for d in `find ./ -type d -d 1 | grep -v '.git' | grep -v 'a.o'`;do
@@ -24,6 +39,7 @@ function push_cpp(){
         if ls $d/*.py >/dev/null 2>&1 ; then git add $d/*.py; fi;
         if ls $d/*.h >/dev/null 2>&1 ; then git add $d/*.h; fi;
     done;
+    git add *.cpp;
     git commit -m "`git status -s`";
     git push;
 }
@@ -43,13 +59,13 @@ function leetcode_push(){
     orig_dir=`pwd`;
     cd ~/code/leetcode;
     push_cpp;
-	cd $orig_dir;
+    cd $orig_dir;
 }
 function lintcode_push(){
     orig_dir=`pwd`;
     cd ~/code/lintcode;
     push_cpp;
-	cd $orig_dir;
+    cd $orig_dir;
 }
 function oj_push(){
     orig_dir=`pwd`;
@@ -82,3 +98,19 @@ function findpyclass(){
 function remove_words(){
     sed -i '' "s/$1//g" $2; 
 }
+
+# New MCL
+# Uses mcls alias to get into mcls folder and svn update
+# then uses date to create a new MCL file with the correct format.
+# My vim skeleton will set up the file content with a nice outline.
+newmcl () {
+    if [ $1 ] ; then
+        cd ~/linkedin/doc/tools/mcl;
+        mclname=`date "+%Y-%m-%d-$1.txt"`
+        vi $mclname
+        [ -f $mclname ] && svn add $mclname
+    else
+        echo 'Usage: newmcl <mcl-name>'
+    fi
+}
+
